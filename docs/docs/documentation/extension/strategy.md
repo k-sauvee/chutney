@@ -5,3 +5,4 @@
   ~
 -->
 
+--8<-- "docs/common/coming_soon.md"

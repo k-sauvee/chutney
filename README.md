@@ -36,7 +36,7 @@ Chutney aims to **test deployed software** in order to validate functional requi
 
 Chutney scenarios are **declarative** written with a **kotlin dsl**. They provide functional requirements and technical details (needed for automation) in a single view.
 
-Chutney is also released as a standalone application including a test execution engine and a a web front end to consult test reports.  
+Chutney is also released as a standalone application including a test execution engine and a web front end to consult test reports.  
 
 Technical details are provided by generic [Actions](https://github.com/Enedis-OSS/chutney/blob/main/chutney/action-spi/src/main/java/com/chutneytesting/action/spi/Action.java) (such as HTTP, AMQP, MongoDB, Kafka, Selenium, etc.)  
 Those Actions are extensions, and you can easily develop yours, even proprietary or non-generic one, and include them in your own release.
@@ -50,8 +50,8 @@ Still asking yourself ["Why another test tool ?"](https://www.chutney-testing.co
 -------------
 ## <a name="demo"></a> Demo
 
-Follow [this](https://github.com/Enedis-OSS/chutney/tree/main/example/.docker#demo-server-container-using-docker-compose) documentation to launch a [docker compose](https://github.com/Enedis-OSS/chutney/blob/main/example/.docker/dev-docker-compose-demo.yml) stack.  
-The Chutney web interface should be visible at http://localhost (admin/Admin).
+Follow the [documentation](https://www.chutney-testing.com/getting_started/demo/) to launch a Chutney demo container.  
+The Chutney web interface should be visible at http://localhost.
 
 -------------
 

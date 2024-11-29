@@ -5,9 +5,9 @@
   ~
 -->
 
-Extends chutney actions by adding yours:
+<h1>Custom action</h1>
 
-# Template
+# Implement
 
 === "Custom action 1"
 
@@ -85,14 +85,29 @@ Extends chutney actions by adding yours:
     }
     ```
 
-# Packaging configuration
-create file chutney.actions in resources/META-INF/extension with custom actions full class name
-```
-my.custom.package.CustomAction1
-my.custom.package.CustomAction2
-```
+# Package
 
-# Examples
+ 1. Declare your custom actions full class names inside the file `META-INF/extension/chutney.actions`.
+    ```
+    my.custom.package.CustomAction1
+    my.custom.package.CustomAction2
+    ```
+
+ 2. Add your custom actions' code and meta file in the classpath of a Chutney engine.
+
+    !!! info "Custom action starting server debug log"
+        Checking your log, you will see something like  
+        ```
+        [main] DEBUG c.c.a.d.DefaultActionTemplateRegistry - Action registered: custom-action-1 (my.custom.package.CustomAction1)
+        [main] DEBUG c.c.a.d.DefaultActionTemplateRegistry - Action registered: custom-action-2 (my.custom.package.CustomAction2)
+        ```
+
+!!! tip "Add custom actions to an already packaged Chutney server"
+
+    1. Package a JAR archive with your custom actions and associated meta file.
+    2. Use the [`loader.path`](https://docs.spring.io/spring-boot/specification/executable-jar/property-launcher.html){:target=_blank} Java system properties to add your archive to classpath.
+
+# Use
 
 === "Kotlin 1"
     ``` kotlin
