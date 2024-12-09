@@ -12,6 +12,7 @@ import jakarta.persistence.Converter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -38,8 +39,13 @@ public class ReportConverter implements AttributeConverter<String, byte[]> {
     private byte[] compress(String report) {
             try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                  GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream)) {
+                InputStream inputStream = new ByteArrayInputStream(report.getBytes(StandardCharsets.UTF_8));
+                byte[] buffer = new byte[1024];
+                int bytesRead;
 
-                gzipOutputStream.write(report.getBytes(StandardCharsets.UTF_8));
+                while ((bytesRead = inputStream.read(buffer)) != -1) {
+                    gzipOutputStream.write(buffer, 0, bytesRead);
+                }
                 gzipOutputStream.finish();
                 return byteArrayOutputStream.toByteArray();
 

@@ -46,18 +46,20 @@ public class ExecutionReportMigrator implements DataMigrator {
             LOGGER.info("Report index not empty. Skipping indexing and in-db compression...");
             return;
         }
+
+        LOGGER.info("Start indexing and in-db compression...");
         PageRequest firstPage = PageRequest.of(0, 10);
         int count = 0;
         compressAndIndex(firstPage, count);
     }
 
     private void compressAndIndex(Pageable pageable, int previousCount) {
+        LOGGER.debug("Indexing and compressing reports in page n° {}", pageable.getPageNumber());
         Slice<ScenarioExecutionReportEntity> slice = scenarioExecutionReportJpaRepository.findAll(pageable);
         List<ScenarioExecutionReportEntity> reports = slice.getContent();
 
         compressAndSaveInDb(reports);
         index(reports);
-
         int count = previousCount + slice.getNumberOfElements();
         if (slice.hasNext()) {
             compressAndIndex(slice.nextPageable(), count);
@@ -69,11 +71,15 @@ public class ExecutionReportMigrator implements DataMigrator {
     private void compressAndSaveInDb(List<ScenarioExecutionReportEntity> reportsInDb) {
         // calling scenarioExecutionReportJpaRepository find() and then save() doesn't call ReportConverter.
         // ReportConverter will be called by entityManager update. So compression will be done.
-        reportsInDb.forEach(report -> entityManager.createQuery(
-                "UPDATE SCENARIO_EXECUTIONS_REPORTS SET report = :report WHERE id = :id")
-            .setParameter("report", report.getReport())
-            .setParameter("id", report.scenarioExecutionId())
-            .executeUpdate());
+        reportsInDb.forEach(report -> {
+            entityManager.createQuery(
+                    "UPDATE SCENARIO_EXECUTIONS_REPORTS SET report = :report WHERE id = :id")
+                .setParameter("report", report.getReport())
+                .setParameter("id", report.scenarioExecutionId())
+                .executeUpdate();
+            entityManager.flush();
+            entityManager.detach(report);
+        });
     }
 
     private void index(List<ScenarioExecutionReportEntity> reportsInDb) {
