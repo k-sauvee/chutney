@@ -5,7 +5,7 @@
  *
  */
 
-package com.chutneytesting.index.infra;
+package com.chutneytesting.search.infra.index;
 
 import static com.chutneytesting.tools.file.FileUtils.initFolder;
 
@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OnDiskIndexConfig implements  IndexConfig{
+public class OnDiskIndexConfig implements IndexConfig {
     private final IndexWriter indexWriter;
     private final Directory indexDirectory;
 

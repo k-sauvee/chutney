@@ -7,13 +7,13 @@
 
 package com.chutneytesting.execution.infra.migration;
 
-import static com.chutneytesting.index.infra.ScenarioExecutionReportIndexRepository.SCENARIO_EXECUTION_REPORT;
-import static com.chutneytesting.index.infra.ScenarioExecutionReportIndexRepository.WHAT;
+import static com.chutneytesting.search.infra.index.ScenarioExecutionReportIndexRepository.SCENARIO_EXECUTION_REPORT;
+import static com.chutneytesting.search.infra.index.ScenarioExecutionReportIndexRepository.WHAT;
 
 import com.chutneytesting.execution.infra.storage.ScenarioExecutionReportJpaRepository;
 import com.chutneytesting.execution.infra.storage.jpa.ScenarioExecutionReportEntity;
-import com.chutneytesting.index.infra.IndexRepository;
-import com.chutneytesting.index.infra.ScenarioExecutionReportIndexRepository;
+import com.chutneytesting.search.infra.index.IndexRepository;
+import com.chutneytesting.search.infra.index.ScenarioExecutionReportIndexRepository;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import org.apache.lucene.index.Term;

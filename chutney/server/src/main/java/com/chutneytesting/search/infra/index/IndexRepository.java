@@ -5,7 +5,7 @@
  *
  */
 
-package com.chutneytesting.index.infra;
+package com.chutneytesting.search.infra.index;
 
 import java.io.IOException;
 import java.util.ArrayList;

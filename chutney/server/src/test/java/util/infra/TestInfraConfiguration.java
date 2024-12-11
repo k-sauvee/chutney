@@ -12,10 +12,10 @@ import static util.infra.AbstractLocalDatabaseTest.DB_CHANGELOG_DB_CHANGELOG_MAS
 import com.chutneytesting.ServerConfiguration;
 import com.chutneytesting.execution.infra.aop.ScenarioExecutionReportIndexingAspect;
 import com.chutneytesting.execution.infra.storage.DatabaseExecutionJpaRepository;
-import com.chutneytesting.index.infra.IndexConfig;
-import com.chutneytesting.index.infra.IndexRepository;
-import com.chutneytesting.index.infra.OnDiskIndexConfig;
-import com.chutneytesting.index.infra.ScenarioExecutionReportIndexRepository;
+import com.chutneytesting.search.infra.index.IndexConfig;
+import com.chutneytesting.search.infra.index.IndexRepository;
+import com.chutneytesting.search.infra.index.OnDiskIndexConfig;
+import com.chutneytesting.search.infra.index.ScenarioExecutionReportIndexRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

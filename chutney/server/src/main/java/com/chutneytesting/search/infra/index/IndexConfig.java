@@ -5,7 +5,7 @@
  *
  */
 
-package com.chutneytesting.index.infra;
+package com.chutneytesting.search.infra.index;
 
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;

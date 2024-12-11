@@ -11,6 +11,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.chutneytesting.search.infra.index.IndexConfig;
+import com.chutneytesting.search.infra.index.IndexRepository;
+import com.chutneytesting.search.infra.index.OnDiskIndexConfig;
 import com.chutneytesting.tools.file.FileUtils;
 import java.io.IOException;
 import java.nio.file.Files;

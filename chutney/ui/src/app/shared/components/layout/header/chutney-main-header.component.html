@@ -14,6 +14,20 @@
     </div>
     <div class="app-header-right">
       <div class="nav">
+        <div class="nav-item search-bar">
+            <input [(ngModel)]="keyword"
+                   [typeahead]="search()"
+                   [typeaheadAsync]="true"
+                   (typeaheadLoading)="isSearching($event)"
+                   (typeaheadOnSelect)="onSelectSearchHit($event)"
+                   typeaheadOptionField="title"
+                   [placeholder]="'global.actions.search' | translate"
+                   [isAnimated]="true"
+                   [typeaheadScrollable]="true"
+                   [typeaheadOptionsInScrollableView]="10"
+                   [typeaheadMinLength]="2"
+                   class="form-control">
+        </div>
         <div class="nav-item" placement="bottom" ngbTooltip="{{'menu.principal.documentation' | translate}}">
           <a class="nav-link" href="https://www.chutney-testing.com/" target="_blank" rel="noopener noreferrer">
             <i class="fa fa-book"></i>

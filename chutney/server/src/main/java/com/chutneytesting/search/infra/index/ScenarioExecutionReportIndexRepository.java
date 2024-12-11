@@ -5,11 +5,14 @@
  *
  */
 
-package com.chutneytesting.index.infra;
+package com.chutneytesting.search.infra.index;
 
 import static org.apache.lucene.document.Field.Store;
 
 import com.chutneytesting.execution.infra.storage.jpa.ScenarioExecutionReportEntity;
+import com.chutneytesting.search.api.dto.Hit;
+import com.chutneytesting.search.domain.SearchRepository;
+import com.chutneytesting.server.core.domain.execution.history.ExecutionHistory;
 import java.util.List;
 import java.util.Set;
 import org.apache.lucene.document.Document;
@@ -28,11 +31,12 @@ import org.apache.lucene.util.BytesRef;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ScenarioExecutionReportIndexRepository {
+public class ScenarioExecutionReportIndexRepository implements SearchRepository {
 
-    public static final String SCENARIO_EXECUTION_REPORT = "scenario_execution_report";
+    public static final String SCENARIO_EXECUTION_REPORT = "scenarioExecutionReport";
     public static final String WHAT = "what";
     private static final String SCENARIO_EXECUTION_ID = "scenarioExecutionId";
+    private static final String SCENARIO_TITLE = "scenarioTitle";
     private static final String REPORT = "report";
     private final IndexRepository indexRepository;
 
@@ -41,14 +45,14 @@ public class ScenarioExecutionReportIndexRepository {
     }
 
     public void save(ScenarioExecutionReportEntity report) {
+        ExecutionHistory.Execution execution = report.toDomain();
         Document document = new Document();
-        document.add(new StringField(WHAT, SCENARIO_EXECUTION_REPORT, Store.NO));
-        document.add(new StringField(SCENARIO_EXECUTION_ID, report.scenarioExecutionId().toString(),Store.YES));
-        document.add(new TextField(REPORT, report.getReport().toLowerCase(), Store.NO));
+        document.add(new StringField(WHAT, SCENARIO_EXECUTION_REPORT, Store.YES));
+        document.add(new StringField(SCENARIO_EXECUTION_ID, execution.executionId().toString(),Store.YES));
+        document.add(new StringField(SCENARIO_TITLE, execution.testCaseTitle(),Store.YES));
+        document.add(new TextField(REPORT, execution.report().toLowerCase(), Store.YES));
         // for sorting
         document.add(new SortedDocValuesField(SCENARIO_EXECUTION_ID, new BytesRef(report.scenarioExecutionId().toString().getBytes()) ));
-
-
         indexRepository.index(document);
     }
 
@@ -72,6 +76,15 @@ public class ScenarioExecutionReportIndexRepository {
 
 
     public List<Long> idsByKeywordInReport(String keyword) {
+        return search(keyword).stream()
+            .map(Hit::id)
+            .map(Long::parseLong)
+            .toList();
+
+    }
+
+    @Override
+    public List<Hit> search(String keyword) {
         Query whatQuery = new TermQuery(new Term(WHAT, SCENARIO_EXECUTION_REPORT));
         Query reportQuery = new WildcardQuery(new Term(REPORT,  "*" + keyword.toLowerCase() + "*"));
 
@@ -84,9 +97,7 @@ public class ScenarioExecutionReportIndexRepository {
 
         return indexRepository.search(query, 100, sort)
             .stream()
-            .map(doc -> doc.get(SCENARIO_EXECUTION_ID))
-            .map(Long::parseLong)
+            .map(doc -> new Hit(doc.get(SCENARIO_EXECUTION_ID), doc.get(SCENARIO_TITLE), doc.get(REPORT), SCENARIO_EXECUTION_REPORT))
             .toList();
-
     }
 }
