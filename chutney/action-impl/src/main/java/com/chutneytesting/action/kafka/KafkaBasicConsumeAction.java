@@ -16,7 +16,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptyMap;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -35,6 +34,7 @@ import com.chutneytesting.action.spi.time.Duration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -227,7 +227,23 @@ public class KafkaBasicConsumeAction implements Action {
     }
 
     private Map<String, Object> extractHeaders(ConsumerRecord<String, String> record) {
-        return Stream.of(record.headers().toArray()).distinct().collect(toMap(Header::key, header -> new String(header.value(), UTF_8)));
+        var result = new HashMap<String, Object>();
+        Stream<Header> distinctHeaders = Stream.of(record.headers().toArray()).distinct();
+        distinctHeaders.forEach(header -> {
+            String headerKey = header.key();
+            if (result.containsKey(headerKey)) {
+                Object headerValue = result.get(headerKey);
+                if (headerValue instanceof String) {
+                    var headerValueAsList = new ArrayList<>();
+                    headerValueAsList.add(headerValue);
+                    result.put(headerKey, headerValueAsList);
+                }
+                ((Collection<String>) result.get(headerKey)).add(new String(header.value(), UTF_8));
+            } else {
+                result.put(headerKey, new String(header.value(), UTF_8));
+            }
+        });
+        return result;
     }
 
     private ConcurrentMessageListenerContainer<String, String> createMessageListenerContainer() {
