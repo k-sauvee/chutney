@@ -12,10 +12,10 @@ import static util.infra.AbstractLocalDatabaseTest.DB_CHANGELOG_DB_CHANGELOG_MAS
 import com.chutneytesting.ServerConfiguration;
 import com.chutneytesting.execution.infra.aop.ScenarioExecutionReportIndexingAspect;
 import com.chutneytesting.execution.infra.storage.DatabaseExecutionJpaRepository;
-import com.chutneytesting.search.infra.index.IndexConfig;
-import com.chutneytesting.search.infra.index.IndexRepository;
-import com.chutneytesting.search.infra.index.OnDiskIndexConfig;
-import com.chutneytesting.search.infra.index.ScenarioExecutionReportIndexRepository;
+import com.chutneytesting.index.infra.lucene.config.IndexConfig;
+import com.chutneytesting.index.infra.lucene.LuceneIndexRepository;
+import com.chutneytesting.index.infra.lucene.config.OnDiskIndexConfig;
+import com.chutneytesting.execution.infra.storage.index.ExecutionReportIndexRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -196,19 +196,19 @@ class TestInfraConfiguration {
     }
 
     @Bean
-    public IndexRepository indexRepository() throws IOException {
+    public LuceneIndexRepository indexRepository() throws IOException {
         Path tempDirectory = Files.createTempDirectory("test-infra-index");
         IndexConfig config = new OnDiskIndexConfig(tempDirectory.toString());
-        return new IndexRepository(config);
+        return new LuceneIndexRepository(config);
     }
 
     @Bean
-    public ScenarioExecutionReportIndexRepository scenarioExecutionReportIndexRepository(IndexRepository indexRepository) {
-        return new ScenarioExecutionReportIndexRepository(indexRepository);
+    public ExecutionReportIndexRepository scenarioExecutionReportIndexRepository(LuceneIndexRepository luceneIndexRepository) {
+        return new ExecutionReportIndexRepository(luceneIndexRepository);
     }
 
     @Bean
-    public ScenarioExecutionReportIndexingAspect indexingAspect(ScenarioExecutionReportIndexRepository indexRepository, DatabaseExecutionJpaRepository scenarioExecutionsJpaRepository) {
+    public ScenarioExecutionReportIndexingAspect indexingAspect(ExecutionReportIndexRepository indexRepository, DatabaseExecutionJpaRepository scenarioExecutionsJpaRepository) {
         return new ScenarioExecutionReportIndexingAspect(indexRepository, scenarioExecutionsJpaRepository);
     }
 

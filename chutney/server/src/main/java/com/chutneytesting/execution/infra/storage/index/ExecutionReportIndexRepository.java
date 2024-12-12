@@ -5,14 +5,16 @@
  *
  */
 
-package com.chutneytesting.search.infra.index;
+package com.chutneytesting.execution.infra.storage.index;
 
 import static org.apache.lucene.document.Field.Store;
 
 import com.chutneytesting.execution.infra.storage.jpa.ScenarioExecutionReportEntity;
-import com.chutneytesting.search.api.dto.Hit;
-import com.chutneytesting.search.domain.SearchRepository;
+import com.chutneytesting.index.api.dto.Hit;
+import com.chutneytesting.index.domain.IndexRepository;
+import com.chutneytesting.index.infra.lucene.LuceneIndexRepository;
 import com.chutneytesting.server.core.domain.execution.history.ExecutionHistory;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.apache.lucene.document.Document;
@@ -31,29 +33,30 @@ import org.apache.lucene.util.BytesRef;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ScenarioExecutionReportIndexRepository implements SearchRepository {
+public class ExecutionReportIndexRepository implements IndexRepository {
 
     public static final String SCENARIO_EXECUTION_REPORT = "scenarioExecutionReport";
     public static final String WHAT = "what";
     private static final String SCENARIO_EXECUTION_ID = "scenarioExecutionId";
     private static final String SCENARIO_TITLE = "scenarioTitle";
     private static final String REPORT = "report";
-    private final IndexRepository indexRepository;
+    private final LuceneIndexRepository luceneIndexRepository;
 
-    public ScenarioExecutionReportIndexRepository(IndexRepository indexRepository) {
-        this.indexRepository = indexRepository;
+    public ExecutionReportIndexRepository(LuceneIndexRepository luceneIndexRepository) {
+        this.luceneIndexRepository = luceneIndexRepository;
     }
 
     public void save(ScenarioExecutionReportEntity report) {
         ExecutionHistory.Execution execution = report.toDomain();
         Document document = new Document();
         document.add(new StringField(WHAT, SCENARIO_EXECUTION_REPORT, Store.YES));
-        document.add(new StringField(SCENARIO_EXECUTION_ID, execution.executionId().toString(),Store.YES));
-        document.add(new StringField(SCENARIO_TITLE, execution.testCaseTitle(),Store.YES));
+        document.add(new TextField(SCENARIO_EXECUTION_ID, execution.executionId().toString(),Store.YES));
+        document.add(new TextField(SCENARIO_TITLE, execution.testCaseTitle(),Store.YES));
+        document.add(new TextField(SCENARIO_TITLE, execution.summary().tags().orElse(Collections.emptySet()),Store.YES));
         document.add(new TextField(REPORT, execution.report().toLowerCase(), Store.YES));
         // for sorting
         document.add(new SortedDocValuesField(SCENARIO_EXECUTION_ID, new BytesRef(report.scenarioExecutionId().toString().getBytes()) ));
-        indexRepository.index(document);
+        luceneIndexRepository.index(document);
     }
 
     public void saveAll(List<ScenarioExecutionReportEntity> reports) {
@@ -67,7 +70,7 @@ public class ScenarioExecutionReportIndexRepository implements SearchRepository 
             .add(idQuery, BooleanClause.Occur.MUST)
             .add(whatQuery, BooleanClause.Occur.MUST)
             .build();
-        indexRepository.delete(query);
+        luceneIndexRepository.delete(query);
     }
 
     public void deleteAllById(Set<Long> scenarioExecutionIds) {
@@ -95,9 +98,15 @@ public class ScenarioExecutionReportIndexRepository implements SearchRepository 
 
         Sort sort = new Sort(SortField.FIELD_SCORE, new SortField(SCENARIO_EXECUTION_ID, SortField.Type.STRING, true));
 
-        return indexRepository.search(query, 100, sort)
+        return luceneIndexRepository.search(query, 100, sort)
             .stream()
-            .map(doc -> new Hit(doc.get(SCENARIO_EXECUTION_ID), doc.get(SCENARIO_TITLE), doc.get(REPORT), SCENARIO_EXECUTION_REPORT))
+            .map(doc -> new Hit(doc.get(SCENARIO_EXECUTION_ID),
+                doc.get(SCENARIO_TITLE),
+                doc.get(SCENARIO_TITLE),
+                doc.get(SCENARIO_TITLE),
+                doc.get(SCENARIO_TITLE),
+                doc.get(REPORT),
+                SCENARIO_EXECUTION_REPORT))
             .toList();
     }
 }

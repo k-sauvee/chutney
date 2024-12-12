@@ -5,18 +5,18 @@
  *
  */
 
-package com.chutneytesting.search.domain;
+package com.chutneytesting.index.domain;
 
-import com.chutneytesting.search.api.dto.Hit;
+import com.chutneytesting.index.api.dto.Hit;
 import java.util.Collection;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SearchService {
-    private final List<SearchRepository> searchRepositories;
+public class IndexService {
+    private final List<IndexRepository> searchRepositories;
 
-    public SearchService(List<SearchRepository> searchRepositories) {
+    public IndexService(List<IndexRepository> searchRepositories) {
         this.searchRepositories = searchRepositories;
     }
 

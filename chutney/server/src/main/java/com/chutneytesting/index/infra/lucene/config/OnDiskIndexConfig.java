@@ -5,7 +5,7 @@
  *
  */
 
-package com.chutneytesting.search.infra.index;
+package com.chutneytesting.index.infra.lucene.config;
 
 import static com.chutneytesting.tools.file.FileUtils.initFolder;
 

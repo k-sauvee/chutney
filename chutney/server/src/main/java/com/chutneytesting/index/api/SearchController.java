@@ -5,10 +5,10 @@
  *
  */
 
-package com.chutneytesting.search.api;
+package com.chutneytesting.index.api;
 
-import com.chutneytesting.search.api.dto.Hit;
-import com.chutneytesting.search.domain.SearchService;
+import com.chutneytesting.index.api.dto.Hit;
+import com.chutneytesting.index.domain.IndexService;
 import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,15 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/search")
 public class SearchController {
 
-    private final SearchService searchService;
+    private final IndexService indexService;
 
-    public SearchController(SearchService searchService) {
-        this.searchService = searchService;
+    public SearchController(IndexService indexService) {
+        this.indexService = indexService;
     }
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('SCENARIO_READ', 'CAMPAIGN_READ', 'DATASET_READ')")
     public List<Hit> search(@RequestParam("keyword") String keyword) {
-        return searchService.search(keyword);
+        return indexService.search(keyword);
     }
 }

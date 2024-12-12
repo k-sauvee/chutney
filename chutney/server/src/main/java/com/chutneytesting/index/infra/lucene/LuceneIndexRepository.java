@@ -5,8 +5,9 @@
  *
  */
 
-package com.chutneytesting.search.infra.index;
+package com.chutneytesting.index.infra.lucene;
 
+import com.chutneytesting.index.infra.lucene.config.IndexConfig;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +23,12 @@ import org.apache.lucene.store.Directory;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class IndexRepository {
+public class LuceneIndexRepository {
 
     private final IndexWriter indexWriter;
     private final Directory indexDirectory;
 
-    public IndexRepository(IndexConfig config) {
+    public LuceneIndexRepository(IndexConfig config) {
         this.indexDirectory = config.directory();
         this.indexWriter = config.indexWriter();
     }

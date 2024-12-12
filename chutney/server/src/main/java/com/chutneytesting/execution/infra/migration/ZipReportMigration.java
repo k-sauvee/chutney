@@ -7,13 +7,13 @@
 
 package com.chutneytesting.execution.infra.migration;
 
-import static com.chutneytesting.search.infra.index.ScenarioExecutionReportIndexRepository.SCENARIO_EXECUTION_REPORT;
-import static com.chutneytesting.search.infra.index.ScenarioExecutionReportIndexRepository.WHAT;
+import static com.chutneytesting.execution.infra.storage.index.ExecutionReportIndexRepository.SCENARIO_EXECUTION_REPORT;
+import static com.chutneytesting.execution.infra.storage.index.ExecutionReportIndexRepository.WHAT;
 
 import com.chutneytesting.execution.infra.storage.ScenarioExecutionReportJpaRepository;
 import com.chutneytesting.execution.infra.storage.jpa.ScenarioExecutionReportEntity;
-import com.chutneytesting.search.infra.index.IndexRepository;
-import com.chutneytesting.search.infra.index.ScenarioExecutionReportIndexRepository;
+import com.chutneytesting.index.infra.lucene.LuceneIndexRepository;
+import com.chutneytesting.execution.infra.storage.index.ExecutionReportIndexRepository;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import org.apache.lucene.index.Term;
@@ -32,17 +32,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class ZipReportMigration implements CommandLineRunner {
 
 
-    private final ScenarioExecutionReportIndexRepository scenarioExecutionReportIndexRepository;
+    private final ExecutionReportIndexRepository executionReportIndexRepository;
     private final ScenarioExecutionReportJpaRepository scenarioExecutionReportJpaRepository;
-    private final IndexRepository indexRepository;
+    private final LuceneIndexRepository luceneIndexRepository;
     private final EntityManager entityManager;
     private static final Logger LOGGER = LoggerFactory.getLogger(ZipReportMigration.class);
 
 
-    public ZipReportMigration(ScenarioExecutionReportIndexRepository scenarioExecutionReportIndexRepository, ScenarioExecutionReportJpaRepository scenarioExecutionReportJpaRepository, IndexRepository indexRepository, EntityManager entityManager) {
-        this.scenarioExecutionReportIndexRepository = scenarioExecutionReportIndexRepository;
+    public ZipReportMigration(ExecutionReportIndexRepository executionReportIndexRepository, ScenarioExecutionReportJpaRepository scenarioExecutionReportJpaRepository, LuceneIndexRepository luceneIndexRepository, EntityManager entityManager) {
+        this.executionReportIndexRepository = executionReportIndexRepository;
         this.scenarioExecutionReportJpaRepository = scenarioExecutionReportJpaRepository;
-        this.indexRepository = indexRepository;
+        this.luceneIndexRepository = luceneIndexRepository;
         this.entityManager = entityManager;
     }
 
@@ -86,12 +86,12 @@ public class ZipReportMigration implements CommandLineRunner {
     }
 
     private void index(List<ScenarioExecutionReportEntity> reportsInDb) {
-        scenarioExecutionReportIndexRepository.saveAll(reportsInDb);
+        executionReportIndexRepository.saveAll(reportsInDb);
     }
 
     private boolean isMigrationDone() {
         Query whatQuery = new TermQuery(new Term(WHAT, SCENARIO_EXECUTION_REPORT));
-        int indexedReports = indexRepository.count(whatQuery);
+        int indexedReports = luceneIndexRepository.count(whatQuery);
         return indexedReports > 0;
     }
 }

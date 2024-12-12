@@ -11,7 +11,7 @@ import com.chutneytesting.execution.infra.storage.DatabaseExecutionJpaRepository
 import com.chutneytesting.execution.infra.storage.jpa.ScenarioExecutionEntity;
 import com.chutneytesting.execution.infra.storage.jpa.ScenarioExecutionReportEntity;
 import com.chutneytesting.scenario.infra.jpa.ScenarioEntity;
-import com.chutneytesting.search.infra.index.ScenarioExecutionReportIndexRepository;
+import com.chutneytesting.execution.infra.storage.index.ExecutionReportIndexRepository;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,10 +22,10 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class ScenarioExecutionReportIndexingAspect {
-    private final ScenarioExecutionReportIndexRepository reportIndexRepository;
+    private final ExecutionReportIndexRepository reportIndexRepository;
     private final DatabaseExecutionJpaRepository scenarioExecutionRepository;
 
-    public ScenarioExecutionReportIndexingAspect(ScenarioExecutionReportIndexRepository reportIndexRepository, DatabaseExecutionJpaRepository scenarioExecutionRepository) {
+    public ScenarioExecutionReportIndexingAspect(ExecutionReportIndexRepository reportIndexRepository, DatabaseExecutionJpaRepository scenarioExecutionRepository) {
         this.reportIndexRepository = reportIndexRepository;
         this.scenarioExecutionRepository = scenarioExecutionRepository;
     }

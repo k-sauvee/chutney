@@ -5,11 +5,11 @@
  *
  */
 
-package com.chutneytesting.search.domain;
+package com.chutneytesting.index.domain;
 
-import com.chutneytesting.search.api.dto.Hit;
+import com.chutneytesting.index.api.dto.Hit;
 import java.util.List;
 
-public interface SearchRepository {
+public interface IndexRepository {
     List<Hit> search(String keyword);
 }
