@@ -68,7 +68,7 @@ public class EnvironmentService {
 
     public Environment createEnvironment(Environment environment, boolean force) throws InvalidEnvironmentNameException, AlreadyExistingEnvironmentException {
         if (!force && envAlreadyExist(environment)) {
-            throw new AlreadyExistingEnvironmentException("Environment [" + environment.name + "] already exists");
+            throw new AlreadyExistingEnvironmentException(environment.name);
         }
         createOrUpdate(environment);
         return environment;
@@ -86,7 +86,7 @@ public class EnvironmentService {
         }
         if (environmentNames.size() == 1) {
             logger.error("Cannot delete environment with name {} : cannot delete the last env", environmentName);
-            throw new SingleEnvironmentException("Cannot delete environment with name " + environmentName + " : cannot delete the last env");
+            throw new SingleEnvironmentException(environmentName);
         }
         environmentRepository.delete(environmentName);
         updateEnvironmentHandlers.forEach(renameEnvironmentHandler -> renameEnvironmentHandler.deleteEnvironment(environmentName));
@@ -228,7 +228,7 @@ public class EnvironmentService {
 
     private void createOrUpdate(Environment environment) {
         if (!NAME_VALIDATION_PATTERN.matcher(environment.name).matches()) {
-            throw new InvalidEnvironmentNameException("Environment name must be of 3 to 20 letters, digits, underscore or hyphen");
+            throw new InvalidEnvironmentNameException();
         }
         environmentRepository.save(environment);
     }

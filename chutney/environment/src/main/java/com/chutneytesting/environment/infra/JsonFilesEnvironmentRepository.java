@@ -97,7 +97,7 @@ public class JsonFilesEnvironmentRepository implements EnvironmentRepository {
             Path backupPath = Paths.get(environmentPath.toString() + UUID.randomUUID().getMostSignificantBits() + ".backup");
             Files.move(environmentPath, backupPath);
         } catch (IOException e) {
-            throw new CannotDeleteEnvironmentException("Cannot delete configuration file: " + environmentPath, e);
+            throw new CannotDeleteEnvironmentException(environmentPath, e);
         }
     }
 

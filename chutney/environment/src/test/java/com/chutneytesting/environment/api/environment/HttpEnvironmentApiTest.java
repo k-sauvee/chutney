@@ -125,7 +125,7 @@ public class HttpEnvironmentApiTest {
 
     @Test
     public void createEnvironment_returns_400_when_name_is_invalid() throws Exception {
-        doThrow(new InvalidEnvironmentNameException("message")).when(environmentRepository).save(any());
+        doThrow(new InvalidEnvironmentNameException()).when(environmentRepository).save(any());
         mockMvc.perform(
                 post(environmentBasePath)
                     .content("{\"name\": \"env test\", \"description\": \"test description\"}")
