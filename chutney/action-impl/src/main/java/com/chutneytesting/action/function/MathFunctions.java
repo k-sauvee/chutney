@@ -28,10 +28,6 @@ public class MathFunctions {
     public static Number min(Number a, Number b) {
         String numberType = a.getClass().getSimpleName();
 
-        if (!numberType.equals(b.getClass().getSimpleName())) {
-            throw new IllegalArgumentException("Type is not consistent");
-        }
-
         return switch (numberType) {
             case "Double" -> Math.min(a.doubleValue(), b.doubleValue());
             case "Float" -> Math.min(a.floatValue(), b.floatValue());
@@ -44,10 +40,6 @@ public class MathFunctions {
     @SpelFunction
     public static Number max(Number a, Number b) {
         String numberType = a.getClass().getSimpleName();
-
-        if (!numberType.equals(b.getClass().getSimpleName())) {
-            throw new IllegalArgumentException("Type is not consistent");
-        }
 
         return switch (numberType) {
             case "Double" -> Math.max(a.doubleValue(), b.doubleValue());

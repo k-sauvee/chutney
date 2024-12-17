@@ -8,14 +8,21 @@
 package com.chutneytesting.action.function;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.in;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class MathFunctionsTest {
 
     @Test
-    void abs_unexpected_type() {
+    void abs_short_should_raise_exception() {
         assertThrows(
             IllegalArgumentException.class,
             () -> {
@@ -25,48 +32,48 @@ class MathFunctionsTest {
         );
     }
 
-    @Test
-    void abs_minus_2_should_return_2() {
-        assertThat(MathFunctions.abs(-2d)).isEqualTo(2d);
-        assertThat(MathFunctions.abs(-2f)).isEqualTo(2f);
-        assertThat(MathFunctions.abs(-2)).isEqualTo(2);
-        assertThat(MathFunctions.abs(-2L)).isEqualTo(2L);
+    @ParameterizedTest
+    @MethodSource("provideAbsArguments")
+    void abs_minus_2_should_return_2(Number a, Number expected) {
+        assertThat(MathFunctions.abs(a)).isEqualTo(expected);
     }
 
-    @Test
-    void min_unexpected_type() {
-        assertThrows(
-            IllegalArgumentException.class,
-            () -> {
-                MathFunctions.min(4f, 9);
-            }
+    @ParameterizedTest
+    @MethodSource("provideMinArguments")
+    void min_4_and_9_should_return_4(Number a, Number b, Number expected) {
+        assertThat(MathFunctions.min(a, b)).isEqualTo(expected);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideMaxArguments")
+    void max_4_and_9_should_return_9(Number a, Number b, Number expected) {
+        assertThat(MathFunctions.max(a, b)).isEqualTo(expected);
+    }
+
+    private static Stream<Arguments> provideAbsArguments() {
+        return Stream.of(
+            Arguments.of(-2d, 2d),
+            Arguments.of(-2f, 2f),
+            Arguments.of(-2, 2),
+            Arguments.of(-2L, 2L)
         );
     }
 
-    @Test
-    void min_4_and_9_should_return_4() {
-        assertThat(MathFunctions.min(4d, 9d)).isEqualTo(4d);
-        assertThat(MathFunctions.min(4f, 9f)).isEqualTo(4f);
-        assertThat(MathFunctions.min(4, 9)).isEqualTo(4);
-        assertThat(MathFunctions.min(4L, 9L)).isEqualTo(4L);
-    }
-
-    @Test
-    void max_unexpected_type() {
-        assertThrows(
-            IllegalArgumentException.class,
-            () -> {
-                MathFunctions.max(4f, 9);
-            }
+    private static Stream<Arguments> provideMinArguments() {
+        return Stream.of(
+            Arguments.of(4d, 9d, 4d),
+            Arguments.of(4f, 9f, 4f),
+            Arguments.of(4, 9, 4),
+            Arguments.of(4L, 9L, 4L)
         );
     }
 
-
-    @Test
-    void max_4_and_9_should_return_9() {
-        assertThat(MathFunctions.max(4d, 9d)).isEqualTo(9d);
-        assertThat(MathFunctions.max(4f, 9f)).isEqualTo(9f);
-        assertThat(MathFunctions.max(4, 9)).isEqualTo(9);
-        assertThat(MathFunctions.max(4L, 9L)).isEqualTo(9L);
+    private static Stream<Arguments> provideMaxArguments() {
+        return Stream.of(
+            Arguments.of(4d, 9d, 9d),
+            Arguments.of(4f, 9f, 9f),
+            Arguments.of(4, 9, 9),
+            Arguments.of(4L, 9L, 9L)
+        );
     }
 }
