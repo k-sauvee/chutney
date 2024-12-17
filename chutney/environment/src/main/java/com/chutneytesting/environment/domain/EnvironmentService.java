@@ -82,7 +82,7 @@ public class EnvironmentService {
         List<String> environmentNames = environmentRepository.listNames();
         if (environmentNames.stream().noneMatch(env -> env.equals(environmentName))) {
             logger.error("Environment not found for name {}", environmentName);
-            throw new EnvironmentNotFoundException("Environment not found for name " + environmentNames);
+            throw new EnvironmentNotFoundException(environmentNames);
         }
         if (environmentNames.size() == 1) {
             logger.error("Cannot delete environment with name {} : cannot delete the last env", environmentName);
@@ -112,7 +112,7 @@ public class EnvironmentService {
             throw new UnresolvedEnvironmentException("There is more than one environment. Could not resolve the default one");
         }
         if (envs.isEmpty()) {
-            throw new NoEnvironmentFoundException("No Environment found");
+            throw new NoEnvironmentFoundException();
         }
 
         return envs.get(0);
@@ -209,7 +209,7 @@ public class EnvironmentService {
             .filter(env -> env.containsVariable(key)).toList();
 
         if (!envs.isEmpty() && environments.isEmpty()) {
-            throw new EnvVariableNotFoundException("Variable [" + key + "] not found");
+            throw new EnvVariableNotFoundException(key);
         }
         environments
             .forEach(env -> {
