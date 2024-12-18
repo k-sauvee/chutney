@@ -11,21 +11,21 @@ Following functions help you write and shorten SpEL when you need to perform mat
 
 ## abs
 
-!!! note "Integer abs(Integer a)"
+!!! note "Number abs(Number a)"
 
-    Returns the absolute value of a given integer.  
-    ex. Integer -2 to 2.
+    Returns the absolute value of a given number.  
+    ex. Number -2 to 2.
 
     See [Math.abs()](https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html#abs-int-){:target="_blank"} for further details
 
     **Parameters** :
 
-    * `Integer a` : The integer you want to get an absolute value
+    * `Number a` : The integer you want to get an absolute value
         * ex. -2
 
     **Returns** :
 
-    * An absolute value of a given integer.
+    * An absolute value of a given number.
 
     **Examples** :
 
@@ -35,20 +35,20 @@ Following functions help you write and shorten SpEL when you need to perform mat
 
 ## min
 
-!!! note "Integer min(Integer a, Integer b)"
+!!! note "Number min(Number a, Number b)"
 
     Returns the smaller value of a and b.  
-    ex. Min of 4 and 9 is 4.
+    ex. Min of 4L and 9L is 4L.
 
 
     See [Math.min()](https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html#min-int-int-){:target="_blank"} for further details
 
     **Parameters** :
 
-    * `Integer a` : An integer
-        * ex. 4
-    * `Integer b` : Another integer
-        * ex. 9
+    * `Number a` : A number
+        * ex. 4L
+    * `Number b` : Another number
+        * ex. 9L
 
     **Returns** :
 
@@ -56,25 +56,25 @@ Following functions help you write and shorten SpEL when you need to perform mat
 
     **Examples** :
 
-    SpEL without : `${T(java.lang.Math).min(4, 9)}`
+    SpEL without : `${T(java.lang.Math).min(4L, 9L)}`
 
-    SpEL with    : `${#min(4, 9)}`
+    SpEL with    : `${#min(4L, 9L)}`
 
 ## max
 
-!!! note "Integer max(Integer a, Integer b)"
+!!! note "Number max(Number a, Number b)"
 
     Returns the greater value of a and b.  
-    ex. Min of 4 and 9 is 9.
+    ex. Min of 4f and 9f is 9f.
 
     See [Math.max()](https://docs.oracle.com/javase/8/docs/api/java/lang/Math.html#max-int-int-){:target="_blank"} for further details
 
     **Parameters** :
 
-    * `Integer a` : An integer
-        * ex. 4
-    * `Integer b` : Another integer
-        * ex. 9
+    * `Number a` : A number
+        * ex. 4f
+    * `Number b` : Another number
+        * ex. 9f
 
     **Returns** :
 
@@ -82,6 +82,6 @@ Following functions help you write and shorten SpEL when you need to perform mat
 
     **Examples** :
 
-    SpEL without : `${T(java.lang.Math).max(4, 9)}`
+    SpEL without : `${T(java.lang.Math).max(4f, 9f)}`
 
-    SpEL with    : `${#max(4, 9)}`
+    SpEL with    : `${#max(4f, 9f)}`
