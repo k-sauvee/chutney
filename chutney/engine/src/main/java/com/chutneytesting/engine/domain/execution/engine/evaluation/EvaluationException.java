@@ -21,6 +21,6 @@ public class EvaluationException extends RuntimeException {
     }
 
     EvaluationException(String expression, ParseException e) {
-        super("Cannot resolve " + expression + " , " + e.getMessage(), e);
+        super("Cannot parse " + expression + " , " + e.getMessage(), e);
     }
 }
