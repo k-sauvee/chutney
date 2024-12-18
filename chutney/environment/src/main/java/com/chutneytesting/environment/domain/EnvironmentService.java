@@ -109,7 +109,7 @@ public class EnvironmentService {
     public String defaultEnvironmentName() throws EnvironmentNotFoundException {
         List<String> envs = environmentRepository.listNames();
         if (envs.size() > 1) {
-            throw new UnresolvedEnvironmentException("There is more than one environment. Could not resolve the default one");
+            throw new UnresolvedEnvironmentException();
         }
         if (envs.isEmpty()) {
             throw new NoEnvironmentFoundException();
